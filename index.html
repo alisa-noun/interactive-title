@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nouns - Interactive Logo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@300&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+    .logo-wrap {
+      width: 92vw;
+      max-width: 1500px;
+      position: relative;
+    }
+    .logo-wrap > svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .angle-label {
+      position: absolute;
+      font-size: clamp(8px, 0.8vw, 13px);
+      font-weight: 300;
+      color: #1f33b9;
+      background: #fff;
+      padding: 2px 4px 2px 6px;
+      border: 1px solid #1f33b9;
+      border-radius: 3px;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      white-space: nowrap;
+      font-family: 'Azeret Mono', monospace;
+      transform: translate(-50%, -50%);
+    }
+    .angle-label.resting { opacity: 0; }
+    .angle-label.visible { opacity: 1; }
+    /* S zigzag stroke reveal animation */
+    .s-zig-stroke {
+      animation: s-zig-appear 0.2s ease-out forwards;
+    }
+    @keyframes s-zig-appear {
+      from { opacity: 0; transform: scale(0.3); transform-origin: center; }
+      to   { opacity: var(--final-opacity, 0.8); transform: scale(1); transform-origin: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-wrap" id="logoWrap">
+    <svg id="mainSvg" viewBox="209 150 1500 770" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="brush-blur">
+          <feGaussianBlur stdDeviation="1.2"/>
+        </filter>
+        <!-- Simple rect clip for partial S fill at top -->
+        <clipPath id="s-top-rect-clip">
+          <rect x="1400" y="380" width="320" height="190"/>
+        </clipPath>
+        <clipPath id="s-clip-brush">
+          <path d="M1616.06,697.58c-46.73,18.13-108.86-10.69-108.86-10.69-12.11.44-11.86,10.92-11.85,15.72l-43.17.03-.05-95.63h53.58s24.99,56.36,81.62,38.6c31.05-9.74,35.46-59.55-31.96-59.55-151.8,0-112.15-156.82,9.47-156.82,60.45,0,90.95,44.4,90.95,44.4l-40.5,39.7s-17.15-28.58-53.91-28.58c-45.34,0-56.23,58.58.81,54.37,123.58-9.12,159.41,117.5,53.86,158.45Z"/>
+        </clipPath>
+      </defs>
+
+      <!-- ===== CAPITAL N ===== -->
+      <path id="letterN" d="M565.39,359.57v61.57c-11.29,0-22.65-.31-22.99,16.21v253.5h-73.72c-43.83-66.02-87.66-132.02-131.48-198.04,0,37.52,0,160.54.01,198.04h-95.51v-61.58c11.46,0,23.02.33,23.02-16.97v-252.73h73.69c43.83,65.92,87.66,131.85,131.5,197.77-.01-35.54-.01-162.23-.01-197.77h95.5Z"
+        fill="#1f33b9"/>
+
+      <!-- N annotations: white markers always visible on blue fill; angle labels appear on hover -->
+      <g id="n-annotations">
+        <!-- Dashed bounding-box grid lines (matching U handle line style) -->
+        <line x1="241.65" y1="340" x2="241.65" y2="710" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <line x1="338"    y1="340" x2="338"    y2="710" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <line x1="469"    y1="340" x2="469"    y2="710" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <line x1="565.34" y1="340" x2="565.34" y2="710" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <line x1="224" y1="359.28" x2="584" y2="359.28" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <line x1="224" y1="690.56" x2="584" y2="690.56" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <!-- 68.5° indicators: open circles at the two diagonal junction corners -->
+        <g class="n-marker" data-label="al2"><circle cx="338" cy="360" r="22.5" fill="none" stroke="white" stroke-width="3.5"/><circle cx="338" cy="360" r="30" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+        <g class="n-marker" data-label="al1"><circle cx="469" cy="691" r="22.5" fill="none" stroke="white" stroke-width="3.5"/><circle cx="469" cy="691" r="30" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+        <!-- Counter space arcs (outer angle) — separate from apex circles (inner angle) -->
+        <!-- Upper arc: outer angle between stem and diagonal -->
+        <g class="n-marker" data-label="al7">
+          <path d="M 469,407 A 150,150 0 0,0 380,436" fill="none" stroke="#1f33b9" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="377" y="397" width="96" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+        </g>
+        <!-- Upper apex circle: inner/reflex angle -->
+        <g class="n-marker" data-label="al9">
+          <circle cx="469" cy="557" r="18" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="469" cy="557" r="28" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+        </g>
+        <!-- Lower arc: outer angle between stem and diagonal -->
+        <g class="n-marker" data-label="al8">
+          <path d="M 338,643 A 150,150 0 0,0 427,614" fill="none" stroke="#1f33b9" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="332" y="608" width="100" height="42" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+        </g>
+        <!-- Lower apex circle: inner/reflex angle -->
+        <g class="n-marker" data-label="al10">
+          <circle cx="338" cy="493" r="18" fill="none" stroke="white" stroke-width="3"/>
+          <circle cx="338" cy="493" r="28" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+        </g>
+        <!-- 90° corner indicators: L-shaped inner edges only -->
+        <g class="n-marker" data-label="al3"><path d="M 258,381 L 279,381 L 279,360" fill="none" stroke="white" stroke-width="3"/><rect x="251" y="353" width="35" height="35" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+        <g class="n-marker" data-label="al4"><path d="M 572,381 L 551,381 L 551,360" fill="none" stroke="white" stroke-width="3"/><rect x="544" y="353" width="35" height="35" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+        <g class="n-marker" data-label="al5"><path d="M 242,670 L 256,670 L 256,691" fill="none" stroke="white" stroke-width="3"/><rect x="235" y="663" width="35" height="35" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+        <g class="n-marker" data-label="al6"><path d="M 542,670 L 528,670 L 528,691" fill="none" stroke="white" stroke-width="3"/><rect x="514" y="663" width="35" height="35" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+      </g>
+
+      <!-- ===== O ===== -->
+      <path id="letterO" d="M710.34,429.1c-75.09,0-136.19,59.93-136.19,137.09s61.1,137.09,136.19,137.09,136.2-59.92,136.2-137.09-61.1-137.09-136.2-137.09ZM710.34,643.37c-35.82,0-64.79-35.84-64.79-77.17s28.96-77.17,64-77.17,65.59,36.18,65.59,77.17-30.56,77.17-64.8,77.17Z"
+        fill="#1f33b9"/>
+      <!-- O pixel overlay -->
+      <g id="o-pixels"></g>
+
+      <!-- ===== U — real path from plain SVG ===== -->
+      <path id="letterU"
+        d="M1046.22,604.78c-33.58,52.46-92.59,38.97-92.59-.56v-167.81h-91.51v58.41c6.33,0,18.79-.3,19.63,15.27v95.62c0,95.74,104.18,126.34,176.78,67.9,9.29,14.95,23.7,25.27,42.66,29.68,12.4-16.13,24.82-32.24,37.23-48.37-12.38-4.12-20.31-11.52-20.31-27.8v-190.7h-71.89s0,161.84,0,168.37Z"
+        fill="#1f33b9"/>
+
+      <!-- U bezier editor (handles generated by JS) -->
+      <g id="u-editor" opacity="1" style="transition: opacity 0.3s ease">
+        <!-- Path outline drawn by JS -->
+        <path id="u-outline" fill="none" stroke="white" stroke-width="1.5" opacity="0.6"/>
+      </g>
+
+      <!-- ===== LOWERCASE n ===== -->
+      <g id="letter-n-wrap">
+        <path id="letterLn" d="M1435.94,654.92c-12.4,16.13-24.82,32.25-37.23,48.37-35.46-8.23-54.96-37.15-54.96-78.29,0,0-.03-50.61-.03-89.67s-44.36-62.4-92.13-6.2v161.72h-91.57v-57.35c16.02,0,19.21-6.63,19.68-16.38v-106.31c-.14-17.01-13.16-16.69-19.68-16.69v-57.7h81.26v36.71c52.78-68.54,174.15-60.45,174.15,48.35l.03,105.64c0,16.28,8.11,23.68,20.48,27.8Z"
+          fill="#1f33b9"/>
+      </g>
+      <!-- n width measurement lines -->
+      <g id="n-width-annotations" opacity="0" style="transition: opacity 0.3s ease">
+        <line id="n-left-line" x1="1160" y1="420" x2="1160" y2="715" stroke="#1f33b9" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.4"/>
+        <line id="n-right-line" x1="1439" y1="420" x2="1439" y2="715" stroke="#1f33b9" stroke-width="1.5" stroke-dasharray="5 3" opacity="0.4"/>
+        <line id="n-dim-line" x1="1160" y1="715" x2="1439" y2="715" stroke="#1f33b9" stroke-width="1.5" opacity="0.5"/>
+        <line id="n-dim-arrow-l" x1="1160" y1="715" x2="1168" y2="710" stroke="#1f33b9" stroke-width="1.5" opacity="0.5"/>
+        <line id="n-dim-arrow-l2" x1="1160" y1="715" x2="1168" y2="720" stroke="#1f33b9" stroke-width="1.5" opacity="0.5"/>
+        <line id="n-dim-arrow-r" x1="1439" y1="715" x2="1431" y2="710" stroke="#1f33b9" stroke-width="1.5" opacity="0.5"/>
+        <line id="n-dim-arrow-r2" x1="1439" y1="715" x2="1431" y2="720" stroke="#1f33b9" stroke-width="1.5" opacity="0.5"/>
+        <text id="n-width-label" x="1299" y="735" text-anchor="middle" fill="#1f33b9" font-family="'SF Mono','Fira Code','Courier New',monospace" font-size="16" font-weight="700">100%</text>
+      </g>
+
+      <!-- ===== S ===== -->
+      <!-- White fill to knock out behind paint strokes (so S looks hollow) -->
+      <path
+        d="M1616.06,697.58c-46.73,18.13-108.86-10.69-108.86-10.69-12.11.44-11.86,10.92-11.85,15.72l-43.17.03-.05-95.63h53.58s24.99,56.36,81.62,38.6c31.05-9.74,35.46-59.55-31.96-59.55-151.8,0-112.15-156.82,9.47-156.82,60.45,0,90.95,44.4,90.95,44.4l-40.5,39.7s-17.15-28.58-53.91-28.58c-45.34,0-56.23,58.58.81,54.37,123.58-9.12,159.41,117.5,53.86,158.45Z"
+        fill="white"/>
+      <!-- Solid S fill at top — S path clipped by rect to show only top portion -->
+      <path id="s-top-fill" clip-path="url(#s-top-rect-clip)"
+        d="M1616.06,697.58c-46.73,18.13-108.86-10.69-108.86-10.69-12.11.44-11.86,10.92-11.85,15.72l-43.17.03-.05-95.63h53.58s24.99,56.36,81.62,38.6c31.05-9.74,35.46-59.55-31.96-59.55-151.8,0-112.15-156.82,9.47-156.82,60.45,0,90.95,44.4,90.95,44.4l-40.5,39.7s-17.15-28.58-53.91-28.58c-45.34,0-56.23,58.58.81,54.37,123.58-9.12,159.41,117.5,53.86,158.45Z"
+        fill="#1f33b9"/>
+      <!-- Brush strokes (clipped to S shape) -->
+      <g id="s-paint" clip-path="url(#s-clip-brush)"></g>
+      <!-- Hidden path for isPointInFill hit testing -->
+      <path id="s-hit"
+        d="M1616.06,697.58c-46.73,18.13-108.86-10.69-108.86-10.69-12.11.44-11.86,10.92-11.85,15.72l-43.17.03-.05-95.63h53.58s24.99,56.36,81.62,38.6c31.05-9.74,35.46-59.55-31.96-59.55-151.8,0-112.15-156.82,9.47-156.82,60.45,0,90.95,44.4,90.95,44.4l-40.5,39.7s-17.15-28.58-53.91-28.58c-45.34,0-56.23,58.58.81,54.37,123.58-9.12,159.41,117.5,53.86,158.45Z"
+        fill="#1f33b9" opacity="0" pointer-events="none"/>
+      <!-- Thick stroke outline on top -->
+      <path id="s-stroke"
+        d="M1616.06,697.58c-46.73,18.13-108.86-10.69-108.86-10.69-12.11.44-11.86,10.92-11.85,15.72l-43.17.03-.05-95.63h53.58s24.99,56.36,81.62,38.6c31.05-9.74,35.46-59.55-31.96-59.55-151.8,0-112.15-156.82,9.47-156.82,60.45,0,90.95,44.4,90.95,44.4l-40.5,39.7s-17.15-28.58-53.91-28.58c-45.34,0-56.23,58.58.81,54.37,123.58-9.12,159.41,117.5,53.86,158.45Z"
+        fill="none" stroke="#1f33b9" stroke-width="5" stroke-linejoin="round" opacity="1"/>
+    </svg>
+
+    <!-- Angle labels for N -->
+    <div class="angle-label resting" id="al1">68.5&deg;</div>
+    <div class="angle-label resting" id="al2">68.5&deg;</div>
+    <div class="angle-label resting" id="al3">90&deg;</div>
+    <div class="angle-label resting" id="al4">90&deg;</div>
+    <div class="angle-label resting" id="al5">90&deg;</div>
+    <div class="angle-label resting" id="al6">90&deg;</div>
+    <div class="angle-label resting" id="al7">33.5&deg;</div>
+    <div class="angle-label resting" id="al8">33.5&deg;</div>
+    <div class="angle-label resting" id="al9">326.5&deg;</div>
+    <div class="angle-label resting" id="al10">326.5&deg;</div>
+  </div>
+
+  <script>
+    const mainSvg = document.getElementById('mainSvg');
+    const logoWrap = document.getElementById('logoWrap');
+
+    function svgToPercent(svgX, svgY) {
+      const vb = mainSvg.viewBox.baseVal;
+      return {
+        x: ((svgX - vb.x) / vb.width) * 100,
+        y: ((svgY - vb.y) / vb.height) * 100
+      };
+    }
+
+    function pageToSvg(px, py) {
+      const rect = mainSvg.getBoundingClientRect();
+      const vb = mainSvg.viewBox.baseVal;
+      const svgAspect = vb.width / vb.height;
+      const boxAspect = rect.width / rect.height;
+      let renderW, renderH, offsetX, offsetY;
+      if (boxAspect > svgAspect) {
+        renderH = rect.height; renderW = rect.height * svgAspect;
+        offsetX = (rect.width - renderW) / 2; offsetY = 0;
+      } else {
+        renderW = rect.width; renderH = rect.width / svgAspect;
+        offsetX = 0; offsetY = (rect.height - renderH) / 2;
+      }
+      return {
+        x: vb.x + ((px - rect.left - offsetX) / renderW) * vb.width,
+        y: vb.y + ((py - rect.top - offsetY) / renderH) * vb.height
+      };
+    }
+
+    // ===== Angle labels =====
+    const labelPositions = [
+      { id: 'al1', x: 357, y: 668 },
+      { id: 'al2', x: 449, y: 378 },
+      { id: 'al3', x: 249, y: 350 },
+      { id: 'al4', x: 569, y: 350 },
+      { id: 'al5', x: 339, y: 698 },
+      { id: 'al6', x: 474, y: 698 },
+      { id: 'al7', x: 430, y: 420 },
+      { id: 'al8', x: 380, y: 630 },
+      { id: 'al9', x: 480, y: 555 },
+      { id: 'al10', x: 350, y: 495 },
+    ];
+    function positionLabels() {
+      labelPositions.forEach(lp => {
+        const el = document.getElementById(lp.id);
+        const p = svgToPercent(lp.x, lp.y);
+        el.style.left = p.x + '%';
+        el.style.top = p.y + '%';
+      });
+    }
+    positionLabels();
+    window.addEventListener('resize', positionLabels);
+
+    // ===== Letter regions =====
+    function getRegion(sx, sy) {
+      if (sx >= 229 && sx <= 579 && sy >= 340 && sy <= 710) return 'N';
+      if (sx >= 569 && sx <= 854 && sy >= 410 && sy <= 720) return 'O';
+      if (sx >= 854 && sx <= 1150 && sy >= 410 && sy <= 720) return 'U';
+      if (sx >= 1150 && sx <= 1449 && sy >= 410 && sy <= 720) return 'n';
+      if (sx >= 1449 && sx <= 1700 && sy >= 370 && sy <= 720) return 'S';
+      return null;
+    }
+
+    // ===== O Pixels =====
+    const oPixels = document.getElementById('o-pixels');
+    const pxSize = 14;
+    const oPixelData = [];
+    const oCx = 710.34, oCy = 566.19;
+
+    for (let x = 569; x <= 854; x += pxSize) {
+      for (let y = 420; y <= 710; y += pxSize) {
+        const dx = x - oCx, dy = y - oCy;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const inHole = (dx * dx) / (68 * 68) + (dy * dy) / (80 * 80) < 1;
+        if (!inHole && dist < 145) {
+          const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          r.setAttribute('x', x); r.setAttribute('y', y);
+          r.setAttribute('width', pxSize - 2); r.setAttribute('height', pxSize - 2);
+          r.setAttribute('fill', '#1f33b9');
+          r.setAttribute('stroke', 'white'); r.setAttribute('stroke-width', '1.5');
+          r.setAttribute('opacity', '0');
+          oPixels.appendChild(r);
+          oPixelData.push({ el: r, px: x + pxSize / 2, py: y + pxSize / 2 });
+        }
+      }
+    }
+
+    const O_REST_X = 765, O_REST_Y = 472, O_RADIUS = 75;
+    let lastOX = O_REST_X, lastOY = O_REST_Y;
+
+    const strayPixels = oPixelData
+      .filter(p => {
+        const dx = p.px - O_REST_X, dy = p.py - O_REST_Y;
+        const d = Math.sqrt(dx * dx + dy * dy);
+        return d >= O_RADIUS + 2 && d < O_RADIUS + 55;
+      })
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 9);
+    const straySet = new Set(strayPixels.map(p => p.el));
+
+    let oHovering = false;
+    let oJitterInterval = null;
+
+    function applyOPixels(spotX, spotY) {
+      oPixelData.forEach(p => {
+        const dx = p.px - spotX, dy = p.py - spotY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < O_RADIUS) {
+          p.el.setAttribute('opacity', '1');
+          // Main blob stays on grid
+          p.el.setAttribute('x', p.px - pxSize/2);
+          p.el.setAttribute('y', p.py - pxSize/2);
+        } else if (straySet.has(p.el)) {
+          if (oHovering) {
+            // Wander anywhere around the O ring
+            const angle = Math.random() * Math.PI * 2;
+            const minR = 80, maxR = 160;
+            const r = minR + Math.random() * (maxR - minR);
+            const wx = oCx + Math.cos(angle) * r;
+            const wy = oCy + Math.sin(angle) * r;
+            p.el.setAttribute('x', (wx - pxSize/2).toFixed(1));
+            p.el.setAttribute('y', (wy - pxSize/2).toFixed(1));
+            p.el.setAttribute('opacity', (0.3 + Math.random() * 0.5).toFixed(2));
+          } else {
+            p.el.setAttribute('opacity', '0.45');
+          }
+        } else {
+          p.el.setAttribute('opacity', '0');
+        }
+      });
+    }
+
+    function resetOPixelPositions() {
+      oPixelData.forEach(p => {
+        p.el.setAttribute('x', p.px - pxSize/2);
+        p.el.setAttribute('y', p.py - pxSize/2);
+      });
+    }
+
+    function startOJitter() {
+      oHovering = true;
+      if (oJitterInterval) return;
+      oJitterInterval = setInterval(() => {
+        applyOPixels(lastOX, lastOY);
+      }, 180);
+    }
+
+    function stopOJitter() {
+      oHovering = false;
+      clearInterval(oJitterInterval); oJitterInterval = null;
+      resetOPixelPositions();
+    }
+
+    applyOPixels(O_REST_X, O_REST_Y);
+
+    // O sprinkle pixels — near cursor only
+    const sprinklePixels = [];
+    const sprinkleSeeds = [
+      [oCx+155, oCy-60], [oCx+140, oCy+80], [oCx-160, oCy-40],
+      [oCx-145, oCy+90], [oCx+30,  oCy-165],[oCx-50,  oCy+160],
+      [oCx+110, oCy-135],[oCx-120, oCy-120],[oCx+165, oCy+20],
+      [oCx-170, oCy+30], [oCx+60,  oCy+170],[oCx-80,  oCy-158],
+      [oCx+140, oCy-100],[oCx-130, oCy+110],[oCx+20,  oCy-180],
+    ];
+    sprinkleSeeds.forEach(([sx, sy]) => {
+      const r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      const size = 10 + Math.random() * 6;
+      r.setAttribute('x', sx - size/2); r.setAttribute('y', sy - size/2);
+      r.setAttribute('width', size-2); r.setAttribute('height', size-2);
+      r.setAttribute('fill', '#1f33b9');
+      r.setAttribute('stroke', 'white'); r.setAttribute('stroke-width', '1.5');
+      r.setAttribute('opacity', '0');
+      oPixels.appendChild(r);
+      sprinklePixels.push({ el: r, x: sx, y: sy });
+    });
+
+    let sprinkleInterval = null, sprinkleHoverX = oCx, sprinkleHoverY = oCy;
+    function startSprinkles() {
+      if (sprinkleInterval) return;
+      sprinkleInterval = setInterval(() => {
+        sprinklePixels.forEach(p => {
+          const dx = p.x - sprinkleHoverX, dy = p.y - sprinkleHoverY;
+          if (Math.sqrt(dx*dx+dy*dy) < 105) {
+            const show = Math.random() < 0.45;
+            p.el.setAttribute('opacity', show ? String(0.3 + Math.random()*0.55) : '0');
+          } else {
+            p.el.setAttribute('opacity', '0');
+          }
+        });
+      }, 220);
+    }
+    function stopSprinkles() {
+      clearInterval(sprinkleInterval); sprinkleInterval = null;
+      sprinklePixels.forEach(p => p.el.setAttribute('opacity', '0'));
+    }
+
+    // O white sparkles inside ring near cursor
+    const oWhiteEls = [];
+    for (let i = 0; i < 14; i++) {
+      const w = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      w.setAttribute('width','7'); w.setAttribute('height','7');
+      w.setAttribute('fill','white'); w.setAttribute('opacity','0');
+      oPixels.appendChild(w);
+      oWhiteEls.push(w);
+    }
+    let whiteInterval = null;
+    function startWhitePixels() {
+      if (whiteInterval) return;
+      whiteInterval = setInterval(() => {
+        oWhiteEls.forEach(w => {
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.random() * 60;
+          const wx = lastOX + Math.cos(angle)*dist;
+          const wy = lastOY + Math.sin(angle)*dist;
+          const dx = wx - oCx, dy = wy - oCy;
+          const inHole = (dx*dx)/(68*68)+(dy*dy)/(80*80) < 1;
+          const inRing = dx*dx+dy*dy < 145*145;
+          if (!inHole && inRing) {
+            w.setAttribute('x', wx-3.5); w.setAttribute('y', wy-3.5);
+            w.setAttribute('opacity', Math.random()<0.65 ? String(0.4+Math.random()*0.6) : '0');
+          } else {
+            w.setAttribute('opacity','0');
+          }
+        });
+      }, 300);
+    }
+    function stopWhitePixels() {
+      clearInterval(whiteInterval); whiteInterval = null;
+      oWhiteEls.forEach(w => w.setAttribute('opacity','0'));
+    }
+
+    // ===== U BEZIER EDITOR =====
+    const uPathEl = document.getElementById('letterU');
+    const uEditor = document.getElementById('u-editor');
+    let uDragging = null;
+    let uEditStarted = false; // true once user first drags
+
+    // Control points extracted from the real plain-SVG U path (all segments)
+    const uPts = {
+      // Inner bottom curve (start → inner left bottom)
+      innerBR:   { x: 1046.22, y: 604.78 },  // start / inner right bottom
+      cpInnerR:  { x: 1012.64, y: 657.24 },  // inner curve cp1
+      cpInnerL:  { x: 953.63,  y: 643.75 },  // inner curve cp2
+      innerBL:   { x: 953.63,  y: 604.22 },  // inner left bottom
+      // Left inner stem up
+      innerTL:   { x: 953.63,  y: 436.41 },  // inner left top
+      // Left outer top
+      outerTL:   { x: 862.12,  y: 436.41 },  // outer left top
+      // Left notch (serif step)
+      outerNotch: { x: 862.12, y: 494.82 },  // left notch corner
+      // Small serif curve
+      cpSerifL:  { x: 868.45,  y: 494.82 },  // serif curve cp1
+      cpSerifR:  { x: 880.91,  y: 494.52 },  // serif curve cp2
+      serifEnd:  { x: 881.75,  y: 510.09 },  // serif curve end
+      // Outer left stem down
+      outerBL:   { x: 881.75,  y: 605.71 },  // outer left bottom
+      // Big outer bottom curve
+      cpOuterL:  { x: 881.75,  y: 701.45 },  // outer curve cp1
+      cpOuterR:  { x: 985.93,  y: 732.05 },  // outer curve cp2
+      outerBM:   { x: 1058.53, y: 673.61 },  // outer bottom mid
+      // Right exit curves
+      cpExitL:   { x: 1067.82, y: 688.56 },  // exit cp1
+      cpExitR:   { x: 1082.23, y: 698.88 },  // exit cp2
+      outerExit: { x: 1101.19, y: 703.29 },  // outer right exit
+      cpDiagL:   { x: 1113.59, y: 687.16 },  // diagonal cp1
+      cpDiagR:   { x: 1126.01, y: 671.05 },  // diagonal cp2
+      diagEnd:   { x: 1138.42, y: 654.92 },  // diagonal end
+      cpStemL:   { x: 1126.04, y: 650.80 },  // right stem curve cp1
+      cpStemR:   { x: 1118.11, y: 643.40 },  // right stem curve cp2
+      outerStem: { x: 1118.11, y: 627.12 },  // right stem curve end
+      // Right outer top
+      outerTR:   { x: 1118.11, y: 436.42 },  // outer right top
+      // Right inner top
+      innerTR:   { x: 1046.22, y: 436.42 },  // inner right top
+    };
+
+    // Full parametric path from all control points
+    function buildUPath() {
+      const p = uPts;
+      return [
+        `M${p.innerBR.x},${p.innerBR.y}`,
+        `C${p.cpInnerR.x},${p.cpInnerR.y} ${p.cpInnerL.x},${p.cpInnerL.y} ${p.innerBL.x},${p.innerBL.y}`,
+        `L${p.innerTL.x},${p.innerTL.y}`,
+        `L${p.outerTL.x},${p.outerTL.y}`,
+        `L${p.outerNotch.x},${p.outerNotch.y}`,
+        `C${p.cpSerifL.x},${p.cpSerifL.y} ${p.cpSerifR.x},${p.cpSerifR.y} ${p.serifEnd.x},${p.serifEnd.y}`,
+        `L${p.outerBL.x},${p.outerBL.y}`,
+        `C${p.cpOuterL.x},${p.cpOuterL.y} ${p.cpOuterR.x},${p.cpOuterR.y} ${p.outerBM.x},${p.outerBM.y}`,
+        `C${p.cpExitL.x},${p.cpExitL.y} ${p.cpExitR.x},${p.cpExitR.y} ${p.outerExit.x},${p.outerExit.y}`,
+        `C${p.cpDiagL.x},${p.cpDiagL.y} ${p.cpDiagR.x},${p.cpDiagR.y} ${p.diagEnd.x},${p.diagEnd.y}`,
+        `C${p.cpStemL.x},${p.cpStemL.y} ${p.cpStemR.x},${p.cpStemR.y} ${p.outerStem.x},${p.outerStem.y}`,
+        `L${p.outerTR.x},${p.outerTR.y}`,
+        `L${p.innerTR.x},${p.innerTR.y}`,
+        `L${p.innerBR.x},${p.innerBR.y}`,
+        `Z`
+      ].join(' ');
+    }
+
+    // Handle definitions — all anchors and control points
+    const uHandleDefs = [
+      { key: 'innerBR',   type: 'anchor' },
+      { key: 'cpInnerR',  type: 'handle', anchor: 'innerBR' },
+      { key: 'cpInnerL',  type: 'handle', anchor: 'innerBL' },
+      { key: 'innerBL',   type: 'anchor' },
+      { key: 'innerTL',   type: 'anchor' },
+      { key: 'outerTL',   type: 'anchor' },
+      { key: 'outerNotch',type: 'anchor' },
+      { key: 'cpSerifL',  type: 'handle', anchor: 'outerNotch' },
+      { key: 'cpSerifR',  type: 'handle', anchor: 'serifEnd' },
+      { key: 'serifEnd',  type: 'anchor' },
+      { key: 'outerBL',   type: 'anchor' },
+      { key: 'cpOuterL',  type: 'handle', anchor: 'outerBL' },
+      { key: 'cpOuterR',  type: 'handle', anchor: 'outerBM' },
+      { key: 'outerBM',   type: 'anchor' },
+      { key: 'cpExitL',   type: 'handle', anchor: 'outerBM' },
+      { key: 'cpExitR',   type: 'handle', anchor: 'outerExit' },
+      { key: 'outerExit', type: 'anchor' },
+      { key: 'cpDiagL',   type: 'handle', anchor: 'outerExit' },
+      { key: 'cpDiagR',   type: 'handle', anchor: 'diagEnd' },
+      { key: 'diagEnd',   type: 'anchor' },
+      { key: 'cpStemL',   type: 'handle', anchor: 'diagEnd' },
+      { key: 'cpStemR',   type: 'handle', anchor: 'outerStem' },
+      { key: 'outerStem', type: 'anchor' },
+      { key: 'outerTR',   type: 'anchor' },
+      { key: 'innerTR',   type: 'anchor' },
+    ];
+
+    const uHandleEls = {}, uLineEls = {};
+
+    uHandleDefs.filter(h => h.type === 'handle').forEach(h => {
+      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('stroke', '#1f33b9'); line.setAttribute('stroke-width', '3.5');
+      line.setAttribute('stroke-dasharray', '6 4'); line.setAttribute('opacity', '0.55');
+      uEditor.appendChild(line);
+      uLineEls[h.key] = line;
+    });
+
+    uHandleDefs.forEach(h => {
+      let el;
+      if (h.type === 'anchor') {
+        el = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        el.setAttribute('width','13.5'); el.setAttribute('height','13.5');
+        el.setAttribute('fill','white');
+        el.setAttribute('stroke','#1f33b9'); el.setAttribute('stroke-width','1.5');
+      } else {
+        el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        el.setAttribute('r','7.5'); el.setAttribute('fill','#1f33b9');
+        el.setAttribute('stroke','white'); el.setAttribute('stroke-width','1.5');
+      }
+      el.style.cursor = 'move';
+      uEditor.appendChild(el);
+      uHandleEls[h.key] = el;
+
+      el.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        // Switch to parametric path on first drag
+        if (!uEditStarted) {
+          uEditStarted = true;
+          uPathEl.setAttribute('d', buildUPath());
+        }
+        uDragging = h.key;
+        document.body.style.cursor = 'move';
+      });
+    });
+
+    const uOutline = document.getElementById('u-outline');
+
+    function updateUHandles() {
+      uHandleDefs.forEach(h => {
+        const pt = uPts[h.key];
+        const el = uHandleEls[h.key];
+        if (h.type === 'anchor') {
+          el.setAttribute('x', pt.x - 6.75); el.setAttribute('y', pt.y - 6.75);
+        } else {
+          el.setAttribute('cx', pt.x); el.setAttribute('cy', pt.y);
+          if (h.anchor && uPts[h.anchor]) {
+            const ap = uPts[h.anchor];
+            const line = uLineEls[h.key];
+            line.setAttribute('x1', ap.x); line.setAttribute('y1', ap.y);
+            line.setAttribute('x2', pt.x); line.setAttribute('y2', pt.y);
+            // Color based on background: white on blue, blue on white
+            const midX = (ap.x + pt.x) / 2, midY = (ap.y + pt.y) / 2;
+            const testPt = mainSvg.createSVGPoint();
+            testPt.x = midX; testPt.y = midY;
+            const onBlue = uPathEl.isPointInFill(testPt);
+            line.setAttribute('stroke', onBlue ? 'white' : '#1f33b9');
+          }
+        }
+      });
+      // Only show outline once user starts editing
+      if (uEditStarted) uOutline.setAttribute('d', buildUPath());
+    }
+    updateUHandles();
+
+    document.addEventListener('mousemove', (e) => {
+      if (!uDragging) return;
+      const s = pageToSvg(e.clientX, e.clientY);
+      // Clamp to viewBox bounds with a small margin
+      const vb = mainSvg.viewBox.baseVal;
+      const margin = 10;
+      uPts[uDragging].x = Math.max(vb.x + margin, Math.min(vb.x + vb.width - margin, s.x));
+      uPts[uDragging].y = Math.max(vb.y + margin, Math.min(vb.y + vb.height - margin, s.y));
+      uPathEl.setAttribute('d', buildUPath());
+      updateUHandles();
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (uDragging) {
+        uDragging = null;
+        document.body.style.cursor = '';
+        if (region !== 'U') uEditor.setAttribute('opacity', '1');
+      }
+    });
+
+    // ===== n width =====
+    const letterLn = document.getElementById('letterLn');
+    const nWidthAnnotations = document.getElementById('n-width-annotations');
+    const nWidthLabel = document.getElementById('n-width-label');
+    const nLeftLine = document.getElementById('n-left-line');
+    const nRightLine = document.getElementById('n-right-line');
+    const nDimLine = document.getElementById('n-dim-line');
+    const nDimArrowL = document.getElementById('n-dim-arrow-l');
+    const nDimArrowL2 = document.getElementById('n-dim-arrow-l2');
+    const nDimArrowR = document.getElementById('n-dim-arrow-r');
+    const nDimArrowR2 = document.getElementById('n-dim-arrow-r2');
+
+    // ===== S BRUSH PAINTING =====
+    const sPaintGroup = document.getElementById('s-paint');
+    const sHitEl = document.getElementById('s-hit');
+    const sStroke = document.getElementById('s-stroke');
+
+    let sLastPaintX = null, sLastPaintY = null;
+    const sBrushSpacing = 6; // SVG units between strokes
+
+    function isInS(svgX, svgY) {
+      try {
+        const pt = mainSvg.createSVGPoint();
+        pt.x = svgX; pt.y = svgY;
+        return sHitEl.isPointInFill(pt);
+      } catch(e) { return false; }
+    }
+
+    function addBrushStroke(x1, y1, x2, y2) {
+      // Main smooth stroke
+      const stroke = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const mx = (x1 + x2) / 2 + (Math.random() - 0.5) * 3;
+      const my = (y1 + y2) / 2 + (Math.random() - 0.5) * 3;
+      stroke.setAttribute('d', `M${x1},${y1} Q${mx},${my} ${x2},${y2}`);
+      stroke.setAttribute('fill', 'none');
+      stroke.setAttribute('stroke', '#1f33b9');
+      const sw = 22 + Math.random() * 12;
+      stroke.setAttribute('stroke-width', sw);
+      stroke.setAttribute('stroke-linecap', 'round');
+      stroke.setAttribute('opacity', String(0.75 + Math.random() * 0.2));
+      sPaintGroup.appendChild(stroke);
+      // Thinner texture strokes alongside for brush feel
+      for (let i = 0; i < 3; i++) {
+        const ts = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const off = (Math.random() - 0.5) * sw * 0.6;
+        const dx = x2 - x1, dy = y2 - y1;
+        const len = Math.sqrt(dx*dx + dy*dy) || 1;
+        const nx = -dy/len, ny = dx/len;
+        const tx1 = x1 + nx*off, ty1 = y1 + ny*off;
+        const tx2 = x2 + nx*off + (Math.random()-0.5)*4, ty2 = y2 + ny*off + (Math.random()-0.5)*4;
+        const tmx = (tx1+tx2)/2 + (Math.random()-0.5)*2, tmy = (ty1+ty2)/2 + (Math.random()-0.5)*2;
+        ts.setAttribute('d', `M${tx1.toFixed(1)},${ty1.toFixed(1)} Q${tmx.toFixed(1)},${tmy.toFixed(1)} ${tx2.toFixed(1)},${ty2.toFixed(1)}`);
+        ts.setAttribute('fill', 'none');
+        ts.setAttribute('stroke', '#1f33b9');
+        ts.setAttribute('stroke-width', (0.5 + Math.random()*1.5).toFixed(1));
+        ts.setAttribute('stroke-linecap', 'round');
+        ts.setAttribute('opacity', (0.3 + Math.random()*0.3).toFixed(2));
+        sPaintGroup.appendChild(ts);
+      }
+    }
+
+    // Pre-paint: solid fill at top of S following the curve, with diagonal
+    // brush-bristle strokes trailing off from the fill edge.
+    (function prePaintS() {
+      const ns = 'http://www.w3.org/2000/svg';
+      const sPath = sStroke;
+      const totalLen = sPath.getTotalLength(); // ~1418
+
+      // Step 1: Solid fill is in the SVG markup (s-top-fill path with s-top-rect-clip).
+
+      // Step 2: Diagonal bristle strokes trailing from the fill edge.
+      // Fill polygon covers top of S roughly y < 540. Bristles emerge
+      // at the bottom edge of the fill, pointing downward along the S curve.
+      // We sample points along the S outline that are near the fill boundary
+      // and draw bristles radiating downward.
+      const strokes = [];
+
+      // Sample the S path and add bristles where y is near the fill edge (530-560)
+      // These are the bristle "roots" at the fill boundary
+      for (let d = 0; d < totalLen; d += 2) {
+        const pt = sPath.getPointAtLength(d);
+
+        // Only add bristles near the fill boundary (y ≈ 560-650)
+        if (pt.y < 560 || pt.y > 650) continue;
+
+        // Get tangent for direction
+        const d2 = Math.min(d + 2, totalLen);
+        const pt2 = sPath.getPointAtLength(d2);
+        const tx = pt2.x - pt.x, ty = pt2.y - pt.y;
+        const tLen = Math.sqrt(tx * tx + ty * ty) || 1;
+
+        // How far from fill edge (0 = at edge, 1 = far away)
+        const distFromEdge = (pt.y - 560) / 90;
+        const density = 1 - distFromEdge;
+        if (Math.random() > density * 0.5) continue;
+
+        // Bristle points roughly downward with some variation following the tangent
+        const bristleLen = (8 + distFromEdge * 35 + Math.random() * 20);
+        // Mix of downward and tangent directions
+        const angle = Math.PI / 2 + (tx / tLen) * 0.4 + (Math.random() - 0.5) * 0.6;
+        const x2 = pt.x + Math.cos(angle) * bristleLen;
+        const y2 = pt.y + Math.sin(angle) * bristleLen;
+
+        strokes.push({
+          x1: pt.x, y1: pt.y, x2, y2,
+          opacity: (0.15 + (1 - distFromEdge) * 0.7) * (0.5 + Math.random() * 0.5),
+          sw: 0.4 + (1 - distFromEdge) * 2.5 + Math.random() * 0.8,
+          d
+        });
+      }
+
+      // Sort for sequential animation
+      strokes.sort((a, b) => a.d - b.d);
+
+      const animDuration = 1.8;
+      strokes.forEach((s, idx) => {
+        const el = document.createElementNS(ns, 'path');
+        const mx = (s.x1 + s.x2) / 2 + (Math.random() - 0.5) * 2;
+        const my = (s.y1 + s.y2) / 2 + (Math.random() - 0.5) * 2;
+        el.setAttribute('d', `M${s.x1.toFixed(1)},${s.y1.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${s.x2.toFixed(1)},${s.y2.toFixed(1)}`);
+        el.setAttribute('fill', 'none');
+        el.setAttribute('stroke', '#1f33b9');
+        el.setAttribute('stroke-width', s.sw.toFixed(1));
+        el.setAttribute('stroke-linecap', 'round');
+        el.classList.add('s-zig-stroke');
+        el.style.opacity = '0';
+        el.style.animationDelay = (0.3 + (idx / strokes.length) * animDuration).toFixed(2) + 's';
+        el.style.setProperty('--final-opacity', s.opacity.toFixed(2));
+        sPaintGroup.appendChild(el);
+      });
+    })();
+
+    function paintSAt(svgX, svgY) {
+      if (!isInS(svgX, svgY)) { sLastPaintX = null; sLastPaintY = null; return; }
+      if (sLastPaintX === null) {
+        sLastPaintX = svgX; sLastPaintY = svgY; return;
+      }
+      const dx = svgX - sLastPaintX, dy = svgY - sLastPaintY;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist >= sBrushSpacing) {
+        addBrushStroke(sLastPaintX, sLastPaintY, svgX, svgY);
+        sLastPaintX = svgX; sLastPaintY = svgY;
+      }
+    }
+
+    // ===== Main interaction =====
+    let region = null;
+
+    // Individual marker hover → show label near cursor
+    let activeMarkerLabel = null;
+    document.querySelectorAll('.n-marker').forEach(marker => {
+      marker.addEventListener('mouseenter', (e) => {
+        const labelId = marker.getAttribute('data-label');
+        if (labelId) {
+          activeMarkerLabel = document.getElementById(labelId);
+          activeMarkerLabel.classList.remove('resting'); activeMarkerLabel.classList.add('visible');
+          // Position near cursor
+          const wrap = document.getElementById('logoWrap');
+          const rect = wrap.getBoundingClientRect();
+          activeMarkerLabel.style.left = ((e.clientX - rect.left + 16) / rect.width * 100) + '%';
+          activeMarkerLabel.style.top = ((e.clientY - rect.top - 12) / rect.height * 100) + '%';
+        }
+      });
+      marker.addEventListener('mousemove', (e) => {
+        if (activeMarkerLabel) {
+          const wrap = document.getElementById('logoWrap');
+          const rect = wrap.getBoundingClientRect();
+          activeMarkerLabel.style.left = ((e.clientX - rect.left + 16) / rect.width * 100) + '%';
+          activeMarkerLabel.style.top = ((e.clientY - rect.top - 12) / rect.height * 100) + '%';
+        }
+      });
+      marker.addEventListener('mouseleave', () => {
+        if (activeMarkerLabel) {
+          activeMarkerLabel.classList.remove('visible'); activeMarkerLabel.classList.add('resting');
+          activeMarkerLabel = null;
+        }
+      });
+    });
+
+    function enterRegion(r) {
+      if (r === 'N') {
+        // markers handle their own labels individually now
+      }
+      if (r === 'O') { startSprinkles(); startWhitePixels(); startOJitter(); }
+      if (r === 'U') { uEditor.setAttribute('opacity', '1'); uEditor.style.transition = 'opacity 0.2s ease'; }
+      if (r === 'n') { nWidthAnnotations.setAttribute('opacity', '1'); }
+      if (r === 'S') {
+        sStroke.setAttribute('opacity', '1');
+        sLastPaintX = null; sLastPaintY = null;
+      }
+    }
+
+    function leaveRegion(r) {
+      if (r === 'N') {
+        // hide all labels when leaving the N region entirely
+        labelPositions.forEach(lp => {
+          const el = document.getElementById(lp.id);
+          el.classList.remove('visible'); el.classList.add('resting');
+        });
+      }
+      if (r === 'O') {
+        stopSprinkles(); stopWhitePixels(); stopOJitter();
+        applyOPixels(lastOX, lastOY);
+      }
+      if (r === 'U') {
+        if (!uDragging) uEditor.setAttribute('opacity', '1');
+      }
+      if (r === 'n') {
+        letterLn.removeAttribute('transform');
+        nWidthAnnotations.setAttribute('opacity', '0');
+      }
+      if (r === 'S') {
+        sStroke.setAttribute('opacity', '1');
+        sLastPaintX = null; sLastPaintY = null;
+      }
+    }
+
+    logoWrap.addEventListener('mousemove', (e) => {
+      const s = pageToSvg(e.clientX, e.clientY);
+      const r = getRegion(s.x, s.y);
+
+      if (r !== region) {
+        if (region) leaveRegion(region);
+        region = r;
+        if (r) enterRegion(r);
+      }
+
+      if (r === 'O') {
+        sprinkleHoverX = s.x; sprinkleHoverY = s.y;
+        lastOX = s.x; lastOY = s.y;
+        applyOPixels(s.x, s.y);
+      }
+
+      if (r === 'n') {
+        const t = Math.max(0, Math.min(1, (s.x - 1150) / 299));
+        const cx = 1296;
+        const scaleX = 0.35 + t * 1.3;
+        letterLn.setAttribute('transform', `translate(${cx*(1-scaleX)},0) scale(${scaleX},1)`);
+        nWidthAnnotations.setAttribute('opacity', '1');
+        const baseW = 280, newW = baseW * scaleX;
+        const newLeft = cx - newW/2, newRight = cx + newW/2;
+        nLeftLine.setAttribute('x1',newLeft); nLeftLine.setAttribute('x2',newLeft);
+        nRightLine.setAttribute('x1',newRight); nRightLine.setAttribute('x2',newRight);
+        nDimLine.setAttribute('x1',newLeft); nDimLine.setAttribute('x2',newRight);
+        nDimArrowL.setAttribute('x1',newLeft); nDimArrowL.setAttribute('x2',newLeft+8);
+        nDimArrowL2.setAttribute('x1',newLeft); nDimArrowL2.setAttribute('x2',newLeft+8);
+        nDimArrowR.setAttribute('x1',newRight); nDimArrowR.setAttribute('x2',newRight-8);
+        nDimArrowR2.setAttribute('x1',newRight); nDimArrowR2.setAttribute('x2',newRight-8);
+        nWidthLabel.setAttribute('x', cx);
+        nWidthLabel.textContent = Math.round(scaleX*100)+'%';
+      }
+
+      if (r === 'S') {
+        paintSAt(s.x, s.y);
+      }
+    });
+
+    logoWrap.addEventListener('mouseleave', () => {
+      if (region) leaveRegion(region);
+      region = null;
+    });
+  </script>
+</body>
+</html>
