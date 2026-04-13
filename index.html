@@ -55,6 +55,9 @@
         <filter id="brush-blur">
           <feGaussianBlur stdDeviation="1.2"/>
         </filter>
+        <clipPath id="n-letter-clip">
+          <use href="#letterN"/>
+        </clipPath>
         <clipPath id="s-clip-brush">
           <path d="M1616.06,697.58c-46.73,18.13-108.86-10.69-108.86-10.69-12.11.44-11.86,10.92-11.85,15.72l-43.17.03-.05-95.63h53.58s24.99,56.36,81.62,38.6c31.05-9.74,35.46-59.55-31.96-59.55-151.8,0-112.15-156.82,9.47-156.82,60.45,0,90.95,44.4,90.95,44.4l-40.5,39.7s-17.15-28.58-53.91-28.58c-45.34,0-56.23,58.58.81,54.37,123.58-9.12,159.41,117.5,53.86,158.45Z"/>
         </clipPath>
@@ -66,42 +69,44 @@
 
       <!-- N annotations: white markers always visible on blue fill; angle labels appear on hover -->
       <g id="n-annotations">
-        <!-- 68.5° indicators: open circles at the two diagonal junction corners -->
-        <g class="n-marker" data-label="al2"><circle cx="338" cy="360" r="22.5" fill="none" stroke="white" stroke-width="3.5"/><circle cx="338" cy="360" r="30" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
-        <g class="n-marker" data-label="al1"><circle cx="469" cy="691" r="22.5" fill="none" stroke="white" stroke-width="3.5"/><circle cx="469" cy="691" r="30" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
-        <!-- Counter space arcs (outer angle) — separate from apex circles (inner angle) -->
-        <!-- Upper arc: outer angle between stem and diagonal -->
-        <g class="n-marker" data-label="al7">
-          <path d="M 469,407 A 150,150 0 0,0 380,436" fill="none" stroke="#1f33b9" stroke-width="1.5" stroke-linecap="round"/>
-          <rect x="377" y="397" width="96" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
-        </g>
-        <!-- Upper apex circle: inner/reflex angle -->
-        <g class="n-marker" data-label="al9">
-          <circle cx="469" cy="557" r="18" fill="none" stroke="white" stroke-width="3"/>
-          <circle cx="469" cy="557" r="28" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
-        </g>
-        <!-- Lower arc: outer angle between stem and diagonal -->
-        <g class="n-marker" data-label="al8">
-          <path d="M 338,643 A 150,150 0 0,0 427,614" fill="none" stroke="#1f33b9" stroke-width="1.5" stroke-linecap="round"/>
-          <rect x="332" y="608" width="100" height="42" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
-        </g>
-        <!-- Lower apex circle: inner/reflex angle -->
-        <g class="n-marker" data-label="al10">
-          <circle cx="338" cy="493" r="18" fill="none" stroke="white" stroke-width="3"/>
-          <circle cx="338" cy="493" r="28" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
-        </g>
-        <!-- 90° corner indicators: L-shaped inner edges only -->
-        <g class="n-marker" data-label="al3"><path d="M 262,382.5 L 287.5,382.5 L 287.5,357" fill="none" stroke="white" stroke-width="3"/><rect x="255" y="350" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
-        <g class="n-marker" data-label="al4"><path d="M 568,382.5 L 542.9,382.5 L 542.9,357" fill="none" stroke="white" stroke-width="3"/><rect x="530" y="350" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
-        <g class="n-marker" data-label="al5"><path d="M 239,668.5 L 264.5,668.5 L 264.5,694" fill="none" stroke="white" stroke-width="3"/><rect x="232" y="656" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
-        <g class="n-marker" data-label="al6"><path d="M 545,668.5 L 519.5,668.5 L 519.5,694" fill="none" stroke="white" stroke-width="3"/><rect x="507" y="656" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
-        <!-- Dashed grid lines rendered LAST so they draw on top of white marker strokes -->
+        <!-- Dashed grid lines (bottom layer) -->
         <line x1="243.45" y1="335" x2="243.45" y2="715" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
         <line x1="335" y1="335" x2="335" y2="715" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
         <line x1="471.75" y1="335" x2="471.75" y2="715" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
         <line x1="563.65" y1="335" x2="563.65" y2="715" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
         <line x1="217" y1="361.35" x2="590" y2="361.35" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
         <line x1="217" y1="689.05" x2="590" y2="689.05" stroke="#1f33b9" stroke-width="3.5" stroke-dasharray="6 4" opacity="0.55"/>
+        <!-- Angle markers (top layer, clipped to N letter so they don't extend outside) -->
+        <g clip-path="url(#n-letter-clip)">
+          <!-- 68.5° indicators: open circles at the two diagonal junction corners -->
+          <g class="n-marker" data-label="al2"><circle cx="338" cy="360" r="22.5" fill="none" stroke="white" stroke-width="3.5"/><circle cx="338" cy="360" r="30" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+          <g class="n-marker" data-label="al1"><circle cx="469" cy="691" r="22.5" fill="none" stroke="white" stroke-width="3.5"/><circle cx="469" cy="691" r="30" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+          <!-- Counter space arcs (outer angle) -->
+          <g class="n-marker" data-label="al7">
+            <path d="M 469,407 A 150,150 0 0,0 380,436" fill="none" stroke="#1f33b9" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="377" y="397" width="96" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+          </g>
+          <!-- Upper apex circle: inner/reflex angle -->
+          <g class="n-marker" data-label="al9">
+            <circle cx="469" cy="557" r="18" fill="none" stroke="white" stroke-width="3"/>
+            <circle cx="469" cy="557" r="28" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+          </g>
+          <!-- Lower arc: outer angle between stem and diagonal -->
+          <g class="n-marker" data-label="al8">
+            <path d="M 338,643 A 150,150 0 0,0 427,614" fill="none" stroke="#1f33b9" stroke-width="1.5" stroke-linecap="round"/>
+            <rect x="332" y="608" width="100" height="42" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+          </g>
+          <!-- Lower apex circle: inner/reflex angle -->
+          <g class="n-marker" data-label="al10">
+            <circle cx="338" cy="493" r="18" fill="none" stroke="white" stroke-width="3"/>
+            <circle cx="338" cy="493" r="28" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/>
+          </g>
+          <!-- 90° corner indicators: L-shaped inner edges only -->
+          <g class="n-marker" data-label="al3"><path d="M 262,382.5 L 287.5,382.5 L 287.5,357" fill="none" stroke="white" stroke-width="3"/><rect x="255" y="350" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+          <g class="n-marker" data-label="al4"><path d="M 568,382.5 L 542.9,382.5 L 542.9,357" fill="none" stroke="white" stroke-width="3"/><rect x="530" y="350" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+          <g class="n-marker" data-label="al5"><path d="M 239,668.5 L 264.5,668.5 L 264.5,694" fill="none" stroke="white" stroke-width="3"/><rect x="232" y="656" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+          <g class="n-marker" data-label="al6"><path d="M 545,668.5 L 519.5,668.5 L 519.5,694" fill="none" stroke="white" stroke-width="3"/><rect x="507" y="656" width="45" height="45" fill="transparent" stroke="none" pointer-events="all" style="cursor:pointer"/></g>
+        </g>
       </g>
 
       <!-- ===== O ===== -->
